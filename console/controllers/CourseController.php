@@ -91,6 +91,11 @@ class CourseController extends BaseController
     {
         $totalCourseCateDetail = CourseCateDetail::find()->count('id');
         $every                 = ceil($totalCourseCateDetail / $processNum);
+        
+        $remoteResult = json_decode($this->http(self::$remoteGoodsList, '{"categoryId":' . $courseCateDetail->categoryId . ',"regionCode":"' . $courseCateDetail->regionCode . '"}'), true);
+        if (!$remoteResult['data']) {
+            die('token expired');
+        }
         $this->app()->db->createCommand()->truncateTable(CourseGoods::tableName())->execute();
         $this->app()->db->close();
         
