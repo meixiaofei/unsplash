@@ -15,14 +15,18 @@ class CourseController extends BaseController
     static $remoteCate       = 'https://cc-skynet.ministudy.com/api/shopping/base/listChildren';
     static $remoteCateDetail = 'https://cc-skynet.ministudy.com/api/shopping/category/getCategoryDetail';
     static $remoteGoodsList  = 'https://cc-skynet.ministudy.com/api/shopping/goods/listGoods';
+    static $remoteLogin = 'https://cc-skynet.ministudy.com/api/shopping/login/doLogin';
     
     public function init()
     {
         parent::init();
     
         $remoteResult = json_decode($this->http(self::$remoteGoodsList, '{"categoryId":68,"regionCode":"310000"}'), true);
-        if (!$remoteResult['data']) {
-            die('token expired');
+
+        if ($remoteResult['flag'] == -1) {
+//            $loginData = $this->http(self::$remoteLogin, '{"code":"023uNTKS0TNDxX1A4xKS0BHLKS0uNTKz"}');
+//            fei_print($loginData);
+            fei_print('token expired');
         }
     }
     
@@ -170,6 +174,6 @@ class CourseController extends BaseController
     
     private function http($url, $params = [], $method = 'post')
     {
-        return http($url, $params, $method, ['token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMTIiLCJleHAiOjE1MzAyNjI3NzcsImlhdCI6MTUzMDE3NjM3NywianRpIjoiMCJ9.MbCvvV4wJDZW2FlhxmjusbHiynT67FmrAFyAqx_TomA', 'Content-Type: application/json;charset=UTF-8']);
+        return http($url, $params, $method, ['token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMTIiLCJleHAiOjE1MzAzNDk2ODEsImlhdCI6MTUzMDI2MzI4MSwianRpIjoiMCJ9.wdR6CGRHfMCWzEySQoIULaTdWkwXk5boq98vIpm6lB4', 'Content-Type: application/json;charset=UTF-8']);
     }
 }
