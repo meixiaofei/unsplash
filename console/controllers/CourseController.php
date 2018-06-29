@@ -16,6 +16,16 @@ class CourseController extends BaseController
     static $remoteCateDetail = 'https://cc-skynet.ministudy.com/api/shopping/category/getCategoryDetail';
     static $remoteGoodsList  = 'https://cc-skynet.ministudy.com/api/shopping/goods/listGoods';
     
+    public function init()
+    {
+        parent::init();
+    
+        $remoteResult = json_decode($this->http(self::$remoteGoodsList, '{"categoryId":68,"regionCode":"310000"}'), true);
+        if (!$remoteResult['data']) {
+            die('token expired');
+        }
+    }
+    
     public function actionCollectProvince()
     {
         $remoteResult = json_decode($this->http(self::$remoteProvince), true);
@@ -92,10 +102,6 @@ class CourseController extends BaseController
         $totalCourseCateDetail = CourseCateDetail::find()->count('id');
         $every                 = ceil($totalCourseCateDetail / $processNum);
         
-        $remoteResult = json_decode($this->http(self::$remoteGoodsList, '{"categoryId":' . $courseCateDetail->categoryId . ',"regionCode":"' . $courseCateDetail->regionCode . '"}'), true);
-        if (!$remoteResult['data']) {
-            die('token expired');
-        }
         $this->app()->db->createCommand()->truncateTable(CourseGoods::tableName())->execute();
         $this->app()->db->close();
         
