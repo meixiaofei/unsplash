@@ -26,7 +26,7 @@ class IndexController extends TopController
             $orientation	string	Opt (Default: null / Available: "landscape", "portrait", "squarish")
             $collections	string	Opt (Default: null / If multiple, comma-separated)
         */
-        $search_string = $this->get('search_string', 'forest');
+        $search_string = $this->get('search_string', '美女');
         $page          = $this->get('page', 1);
         $page_size     = $this->get('page_size', 30);;
         $orientation = null;
@@ -253,19 +253,14 @@ class IndexController extends TopController
             'callbackUrl'   => 'https://your-application.com/oauth/callback',
             'utmSource'     => 'Sunlands Gallery',
         ]);
-        
-        if ($search_string != 'forest') {
-            $cacheKey = "$search_string-$page-$page_size-$orientation";
-            if ($cache = $this->cache()->get($cacheKey)) {
-                $photos = $cache;
-            } else {
-                if ($photos = Search::photos($search_string, $page, $page_size, $orientation)->getResults()) {
-                    $this->cache()->set($cacheKey, $photos);
-                }
-            }
-//            fei_print(json_encode($photos));
+    
+        $cacheKey = "$search_string-$page-$page_size-$orientation";
+        if ($cache = $this->cache()->get($cacheKey)) {
+            $photos = $cache;
         } else {
-            $photos = json_decode(file_get_contents('./api.txt'), true);
+            if ($photos = Search::photos($search_string, $page, $page_size, $orientation)->getResults()) {
+                $this->cache()->set($cacheKey, $photos);
+            }
         }
         
         foreach ($photos as &$photo) {
