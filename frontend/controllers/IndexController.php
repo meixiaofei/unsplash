@@ -14,7 +14,7 @@ class IndexController extends TopController
     
     public function actionIndex()
     {
-        return $this->render('index', ['search_string' => $this->get('search_string')]);
+        return $this->render('index', ['search_string' => $this->get('search_string', '美女')]);
     }
     
     public function actionLists()
